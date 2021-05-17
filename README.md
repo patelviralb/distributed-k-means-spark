@@ -1,11 +1,4 @@
-# Spark Scala Project - CS6240 (Spring 2021) - Group 16
-
-# K-Means Clustering
-
-### Code Authors:
-
-- #### Keshav Chandrashekar
-- #### Viral Patel
+# K-Means Clustering in Distributed Environment
 
 <br />
 
@@ -28,10 +21,14 @@ The repository contains programs which can be executed using Spark model
         - [Installation](#installation)
         - [Configuration](#configuration)
         - [References](#aws-references)
-    - [Distributed K-Means Program Execution](#distributed-k-means-program-execution)
-        - [Run in Standalone mode](#spr-run-in-standalone-mode)
-        - [Run in Pseudo-Distributed mode](#spr-run-in-pseudo-distributed-mode)
-        - [Run in AWS EMR](#spr-run-in-aws-emr)
+    - [Distributed K-Means Program Execution](#dkm-program-execution)
+        - [Run in Standalone mode](#dkm-run-in-standalone-mode)
+        - [Run in Pseudo-Distributed mode](#dkm-run-in-pseudo-distributed-mode)
+        - [Run in AWS EMR](#dkm-run-in-aws-emr)
+    - [Local K-Means Program Execution](#lkm-program-execution)
+        - [Run in Standalone mode](#lkm-run-in-standalone-mode)
+        - [Run in Pseudo-Distributed mode](#lkm-run-in-pseudo-distributed-mode)
+        - [Run in AWS EMR](#lkm-run-in-aws-emr)
 
 <br />
 
@@ -506,7 +503,7 @@ Install JDK version 8 using below steps:
 
 <br />
 
-<h2 id="distributed-k-means-program-execution">Distributed K-Means Program Execution</h2>
+<h2 id="dkm-program-execution">Distributed K-Means Program Execution</h2>
 
 - Copy `Makefile` from `config/` folder:
 
@@ -519,13 +516,14 @@ $ cp config/distributed.k-means.Makefile Makefile
     - `hadoop.root`: Set `${HADOOP_HOME}` path
     - `spark.root`: Set `${SPARK_HOME}` path
 
-<h2 id="spr-run-in-standalone-mode">Run in Standalone mode</h2>
+<h2 id="dkm-run-in-standalone-mode">Run in Standalone mode</h2>
 
 - Edit `Makefile` to customize the parameters
 
     - `local.input=<input directory>`
     - `local.k=<cluster count>`
     - `local.converge_dist=<convergence distance>`
+    - `local.output=<output directory>`
 
 
 - Set Standalone Hadoop environment (Execute Once)
@@ -538,7 +536,7 @@ $ cp config/distributed.k-means.Makefile Makefile
     $ make local
     ```
 
-<h2 id="spr-run-in-pseudo-distributed-mode">Run in Pseudo-Distributed mode</h2>
+<h2 id="dkm-run-in-pseudo-distributed-mode">Run in Pseudo-Distributed mode</h2>
 
 - Update `Makefile` variable
     - `hdfs.user.name=[username]`
@@ -549,6 +547,7 @@ $ cp config/distributed.k-means.Makefile Makefile
     - `hdfs.input=<input directory>`
     - `hdfs.k=<cluster count>`
     - `hdfs.converge_dist=<convergence distance>`
+    - `hdfs.output=<output directory>`
 
 
 - Set Pseudo-Clustered Hadoop Environment (Execute Once)
@@ -565,13 +564,18 @@ $ cp config/distributed.k-means.Makefile Makefile
     $ make pseudoq
     ```
 
-<h2 id="spr-run-in-aws-emr">Run in AWS EMR</h2>
+<h2 id="dkm-run-in-aws-emr">Run in AWS EMR</h2>
 
 - Update `Makefile` variables
     - `aws.emr.release=emr-5.32.0` (Or EMR version of your choice)
     - `aws.bucket.name=[your-aws-s3-bucket-name]`
     - `aws.subnet.id=[your-aws-subnet-id]`
-    - `aws.instance.type=m4.large` (Or Instance of your choice)
+    - `aws.instance.type=m4.xlarge` (Or Instance of your choice)
+    - `aws.executor.memory="8g"`
+    - `aws.driver.memory="8g"`
+    - `aws.driver.memory.overhead="4g"`
+    - `aws.executor.memory.overhead="4g"`
+    - `aws.num.nodes=5`
 
 
 - Edit `Makefile` to customize the parameters
@@ -579,6 +583,107 @@ $ cp config/distributed.k-means.Makefile Makefile
     - `aws.input=<input directory>`
     - `aws.k=<cluster count>`
     - `aws.converge_dist=<convergence distance>`
+    - `aws.output=<output directory>`
+
+
+- Create S3 bucket
+    ```shell
+    $ make make-bucket
+    ```
+
+- Upload input file
+    ```shell
+    $ make upload-input-aws
+    ```
+
+- Start execution
+    ```shell
+    $ make aws
+    ```
+
+<br />
+
+<h2 id="lkm-program-execution">local K-Means Program Execution</h2>
+
+- Copy `Makefile` from `config/` folder:
+
+```shell
+$ cp config/local.k-means.Makefile Makefile 
+```
+
+- Edit `Makefile` to customize the environment
+
+    - `hadoop.root`: Set `${HADOOP_HOME}` path
+    - `spark.root`: Set `${SPARK_HOME}` path
+
+<h2 id="lkm-run-in-standalone-mode">Run in Standalone mode</h2>
+
+- Edit `Makefile` to customize the parameters
+
+    - `local.input=<input directory>`
+    - `local.k=<cluster count>`
+    - `local.converge_dist=<convergence distance>`
+    - `local.output=<output directory>`
+
+
+- Set Standalone Hadoop environment (Execute Once)
+
+    ```shell
+    $ make switch-standalone
+    ```
+- Start execution
+    ```shell
+    $ make local
+    ```
+
+<h2 id="lkm-run-in-pseudo-distributed-mode">Run in Pseudo-Distributed mode</h2>
+
+- Update `Makefile` variable
+    - `hdfs.user.name=[username]`
+
+
+- Edit `Makefile` to customize the parameters
+
+    - `hdfs.input=<input directory>`
+    - `hdfs.k=<cluster count>`
+    - `hdfs.converge_dist=<convergence distance>`
+    - `hdfs.output=<output directory>`
+
+
+- Set Pseudo-Clustered Hadoop Environment (Execute Once)
+    ```shell
+    $ make switch-pseudo
+    ```
+
+- Start execution (First run only)
+    ```shell
+    $ make pseudo
+    ```
+- For every subsequent run use below command since `namenode` and `datanode` already running
+    ```shell
+    $ make pseudoq
+    ```
+
+<h2 id="lkm-run-in-aws-emr">Run in AWS EMR</h2>
+
+- Update `Makefile` variables
+    - `aws.emr.release=emr-5.32.0` (Or EMR version of your choice)
+    - `aws.bucket.name=[your-aws-s3-bucket-name]`
+    - `aws.subnet.id=[your-aws-subnet-id]`
+    - `aws.instance.type=m4.xlarge` (Or Instance of your choice)
+    - `aws.executor.memory="8g"`
+    - `aws.driver.memory="8g"`
+    - `aws.driver.memory.overhead="4g"`
+    - `aws.executor.memory.overhead="4g"`
+    - `aws.num.nodes=5`
+
+
+- Edit `Makefile` to customize the parameters
+
+    - `aws.input=<input directory>`
+    - `aws.k=<cluster count>`
+    - `aws.converge_dist=<convergence distance>`
+    - `aws.output=<output directory>`
 
 
 - Create S3 bucket

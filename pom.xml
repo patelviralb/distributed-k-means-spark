@@ -71,7 +71,7 @@
         </dependency>
         -->
     </dependencies>
-    <groupId>cs6240</groupId>
+    <groupId>vp</groupId>
     <modelVersion>4.0.0</modelVersion>
     <name>k-means-clustering</name>
     <packaging>jar</packaging>

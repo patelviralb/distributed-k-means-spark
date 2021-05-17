@@ -10,35 +10,35 @@ jar.path=target/${jar.name}
 job.name=kmeans.local.LocalKMeans
 # Standalone Execution
 local.master=local[4]
-local.io.type=4M
-local.input=${local.io.type}_input
+local.io.size=4M
+local.input=${local.io.size}_input
 local.k=k_values
 local.converge_dist=0.001
-local.output=${local.io.type}_output
+local.output=${local.io.size}_output
 local.cleaned.input=cleaned_input
 local.spark.default.parallelism=48
 # Pseudo-Cluster Execution
 hdfs.user.name=virtual-ubuntu
-hdfs.io.type=4M
-hdfs.input=${hdfs.io.type}_input
+hdfs.io.size=4M
+hdfs.input=${hdfs.io.size}_input
 hdfs.k=k_values
 hdfs.converge_dist=0.001
-hdfs.output=${hdfs.io.type}_output
+hdfs.output=${hdfs.io.size}_output
 hdfs.spark.default.parallelism=48
 # AWS EMR Execution
 aws.emr.release=emr-5.32.0
-aws.bucket.name=g16-cs6420-scala-local-k-means-clustering
+aws.bucket.name=scala-local-k-means-clustering
 aws.instance.type=m4.xlarge
 aws.executor.memory="8g"
 aws.driver.memory="8g"
 aws.driver.memory.overhead="4g"
 aws.executor.memory.overhead="4g"
 aws.num.nodes=5
-aws.io.type=8M
-aws.input=${aws.io.type}_input
+aws.io.size=8M
+aws.input=${aws.io.size}_input
 aws.k=k_values
 aws.converge_dist=0.001
-aws.output=${aws.instance.type}_${aws.io.type}_output
+aws.output=${aws.instance.type}_${aws.io.size}_output
 aws.log.dir=log
 aws.spark.default.parallelism=48
 # Distribution
