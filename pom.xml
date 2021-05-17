@@ -1,0 +1,85 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <artifactId>k-means-clustering</artifactId>
+    <build>
+        <plugins>
+            <!-- See http://davidb.github.com/scala-maven-plugin -->
+            <plugin>
+                <artifactId>scala-maven-plugin</artifactId>
+                <configuration>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <groupId>net.alchim31.maven</groupId>
+                <version>3.3.1</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>3.1.0</version>
+            </plugin>
+        </plugins>
+        <sourceDirectory>src/main/scala</sourceDirectory>
+    </build>
+    <dependencies>
+        <dependency>
+            <artifactId>scala-library</artifactId>
+            <groupId>org.scala-lang</groupId>
+            <scope>provided</scope>
+            <version>${scala.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>spark-core_2.11</artifactId>
+            <groupId>org.apache.spark</groupId>
+            <scope>provided</scope>
+            <version>${spark.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-sql -->
+        <dependency>
+            <artifactId>spark-sql_2.12</artifactId>
+            <groupId>org.apache.spark</groupId>
+            <scope>provided</scope>
+            <version>${spark.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.scalanlp/breeze -->
+        <dependency>
+            <artifactId>breeze_2.11</artifactId>
+            <groupId>org.scalanlp</groupId>
+            <version>0.11.2</version>
+        </dependency>
+        <!-- Example of dependency included in fat Jar package. -->
+        <!--
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-math3</artifactId>
+          <version>3.2</version>
+        </dependency>
+        -->
+    </dependencies>
+    <groupId>cs6240</groupId>
+    <modelVersion>4.0.0</modelVersion>
+    <name>k-means-clustering</name>
+    <packaging>jar</packaging>
+
+    <properties>
+        <encoding>UTF-8</encoding>
+        <scala.version>2.11.12</scala.version>
+        <spark.version>2.4.7</spark.version>
+    </properties>
+    <version>1.0</version>
+</project>
